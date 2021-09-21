@@ -3,7 +3,14 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  domain: 'localhost:5001',
+  get imageBaseUrl() {
+    return `https://${this.domain}`;
+  },
+  get apiBaseUrl() {
+    return `https://${this.domain}/api`;
+  },
 };
 
 /*

@@ -1,0 +1,77 @@
+<!--Header-->
+<header>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3 pl-0">
+        <div class="logo">
+          <a><img src="./assets/images/logo.png" height="" /></a>
+          <div id="nav-icon" [ngClass]="navIcon ? 'open' : ''">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-5"></div>
+
+      <div class="col-md-4">
+        <ul class="top-icons">
+          <li class="user has-child">
+            <a>
+              <img src="./assets/images/user.png" />
+              <span>Test-User</span> <i class="fa fa-angle-down ml-1"></i>
+            </a>
+            <ul class="sub-menu">
+              <li>
+                <a><span>My Account</span></a>
+              </li>
+              <!-- <li><a routerLink="user/change-password"><span>Change Password</span></a></li> -->
+              <li>
+                <a><span>Log Out</span></a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="main">
+  <div>
+    <accordion [closeOthers]="true" [isAnimated]="true">
+      <accordion-group>
+        <span accordion-heading>
+          <span class="sidebar-icon mr-1"><i class="fa fa-eye"></i></span>
+          <span class="sidebar-text"
+            >DashBoard
+            <span class="float-right"><i class="fa fa-angle-right"></i></span
+          ></span>
+        </span>
+        <div class="sidebar-submenu">
+          <div class="submenu-child">
+            <a>
+              <span class="sidebar-icon"><i class="fa fa-eye"></i></span>
+              <span class="sidebar-text">DashBoard</span>
+            </a>
+          </div>
+        </div>
+      </accordion-group>
+    </accordion>
+  </div>
+  <div [ngClass]="navIcon ? 'right-side ml-5' : 'right-side'">
+    <div class="content">
+      <div class="container-fluid">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <p>©2021</p>
+      </div>
+    </div>
+  </div>
+</footer>
