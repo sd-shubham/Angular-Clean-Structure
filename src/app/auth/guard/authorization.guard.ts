@@ -12,6 +12,7 @@ import { AuthService } from '../services/auth.service';
 @Injectable({ providedIn: 'root' })
 export class AuthorizationGuard implements CanActivate {
   loginPath = '/auth/login';
+  otpPath = '/auth/login/otp';
   //homePath = '/home/dashboard';
   constructor(
     private readonly authService: AuthService,
@@ -33,6 +34,13 @@ export class AuthorizationGuard implements CanActivate {
     }
   }
   validateLoginPath(): boolean {
+    if (this.authService.isUserAuthenticated) {
+      this.router.navigate(['/home']);
+      return false;
+    }
+    return true;
+  }
+  validateLoginOtpPath(): boolean {
     if (this.authService.isUserAuthenticated) {
       this.router.navigate(['/home']);
       return false;

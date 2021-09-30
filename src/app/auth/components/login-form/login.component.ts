@@ -16,7 +16,6 @@ export class LoginComponent implements OnInit {
     private readonly authService: AuthService
   ) {}
   ngOnInit() {
-    debugger;
     this.initialization();
   }
   initialization() {
@@ -31,9 +30,11 @@ export class LoginComponent implements OnInit {
       userName: this.loginForm.controls.userName.value,
       password: this.loginForm.controls.password.value,
     };
+    // this.router.navigate(['/login/login-otp']);
     this.authService.login(login).subscribe((result) => {
       if (result.access_Token && result.userId)
-        this.router.navigate(['/home/dashboard']);
+        //this.router.navigate(['/home/dashboard']);
+        this.router.navigate(['/auth/login/otp']);
     });
   }
 }

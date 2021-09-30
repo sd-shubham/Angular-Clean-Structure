@@ -1,0 +1,11 @@
+<form [formGroup]="otpForm">
+  <div class="container">
+    <div class="row">
+      <div class="form-control">
+        <label for="otp">OTP</label>
+        <input type="text" formControlName="otp" class="from-control" />
+      </div>
+      <button type="button" (click)="validateOtp()">Validate</button>
+    </div>
+  </div>
+</form>

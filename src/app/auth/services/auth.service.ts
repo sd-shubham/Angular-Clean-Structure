@@ -27,7 +27,7 @@ export class AuthService {
     return this.http.post<ILogin, ILoginResponse>('auth/login', login).pipe(
       map((data) => {
         this.token = data.access_Token;
-        localStorage.setItem(APP_TOKEN_LOCAL_STORAGE_KEY, data.access_Token);
+        // localStorage.setItem(APP_TOKEN_LOCAL_STORAGE_KEY, data.access_Token);
         this.currentUserInfo = {
           userId: data.userId,
         };
@@ -36,27 +36,53 @@ export class AuthService {
       })
     );
   }
-  private setUserDetailsFromTokenClaims() {
-    var detail = this.jwtHelper.decodeToken(this.token);
-    console.log('token-detail', detail);
-    const { nameid, unique_name, Role } = this.jwtHelper.decodeToken(
-      this.token
-    ) as ITokenClaims;
-    this.currentUserInfo = {
-      userId: +nameid,
-      name: unique_name,
-      role: Role,
+  private get tokenHeader() {
+    return {
+      headers: { Authorization: `Bearer ${this.token}` },
     };
-    console.log(this.currentUserInfo);
+  }
+  public validateOtp(otp: string): Observable<{ access_Token: string }> {
+    return this.http
+      .get<{ access_Token: string }>(
+        `auth/validate-otp/${otp}`,
+        this.tokenHeader
+      )
+      .pipe(
+        map((resp) => {
+          localStorage.setItem(APP_TOKEN_LOCAL_STORAGE_KEY, resp.access_Token);
+          this.token = resp.access_Token;
+          this.setUserDetailsFromTokenClaims();
+          this.tokenValidityCheckTimer();
+          return resp;
+        })
+      );
+  }
+
+  private setUserDetailsFromTokenClaims() {
+    if (this.token) {
+      var detail = this.jwtHelper.decodeToken(this.token);
+      const { sub, name } = this.jwtHelper.decodeToken(this.token);
+      this.currentUserInfo = {
+        userId: +sub,
+        name: name,
+        role: detail[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ],
+      };
+      console.log(this.currentUserInfo);
+    }
   }
   public get isUserAuthenticated() {
-    // this.setAuthFromLocalStorage(); // remove this from here.
     return this.token && !this.jwtHelper.isTokenExpired(this.token);
+  }
+  public get loggedInUser() {
+    return this.currentUserInfo;
   }
   public setAuthFromLocalStorage() {
     const token = localStorage.getItem(APP_TOKEN_LOCAL_STORAGE_KEY);
     this.token = token;
     this.tokenValidityCheckTimer();
+    this.setUserDetailsFromTokenClaims();
   }
   private tokenValidityCheckTimer() {
     this.timerHandler = this.timer
@@ -100,7 +126,6 @@ export class AuthService {
     this.subject.next();
   }
   public loadMenus() {
-    debugger;
     // load menues here..
     this.setAuthFromLocalStorage();
   }
